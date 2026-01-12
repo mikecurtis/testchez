@@ -3,7 +3,7 @@
 set -ex
 
 HOME="${HOME:-~}"
-REPO="https://github.com/mikecurtis/cheztest"
+REPO="https://github.com/mikecurtis/testchez"
 BREWUSER="brewdog"
 
 fail () {
