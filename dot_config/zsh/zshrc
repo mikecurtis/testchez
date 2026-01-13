@@ -42,6 +42,8 @@ done
 unset opt disabled_opts
 
 
+source <(mise activate zsh)
+
 if [[ $options[zle] = on ]]; then
   source <(fzf --zsh)
 fi
@@ -50,8 +52,6 @@ if [[ $TERM != "dumb" ]]; then
   export STARSHIP_CONFIG="${HOME}/.config/starship/starship.toml"
   source <(starship init zsh)
 fi
-
-source <(mise activate zsh)
 
 export GH_CONFIG_DIR="${HOME}/.local/share/gh"
 
