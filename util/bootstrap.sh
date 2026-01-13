@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -ex
 
@@ -108,14 +108,33 @@ check_install_mise () {
   fi
 }
 
-check_bootstrap () {
-  source <(mise activate bash)
+chsh_zsh () {
+  shell=""
+  if [ "${OS}" = "macos" ]; then
+    shell="$(dscl . -read /Users/${USER} UserShell | awk '{print $2}' | awk -F/ '{print $NF}')"
+  else
+    shell="$(grep "^${USER}:" /etc/passwd | cut -d: -f7 | awk -F/ '{print $NF}')"
+  fi
+  if [ "${shell}" != "zsh" ]; then
+    bin="$(grep zsh /etc/shells | head -1)"
+    [ "${bin}" ] || die "Could not find zsh in /etc/shells"
+    if sudo true 2>/dev/null; then
+      sudo chsh -s ${bin} ${USER} || fail "Failed to sudo chsh"
+    else
+      chsh -s ${bin} || fail "Failed to chsh"
+    fi
+  fi
+}
+
+bootstrap_chezmoi () {
   mise use -g chezmoi || fail "chezmoi install failed"
-  chezmoi init ${REPO} --apply || fail "could not init chezmoi"
+  mise exec chezmoi -- chezmoi init ${REPO} --apply || fail "could not init chezmoi"
+  mise install
 }
 
 check_install curl
 check_install git
 check_install zsh
 check_install_mise
-check_bootstrap
+chsh_zsh
+bootstrap_chezmoi
