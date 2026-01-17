@@ -128,7 +128,6 @@ chsh_zsh () {
 
 bootstrap_chezmoi () {
   mise use -g chezmoi || fail "chezmoi install failed"
-  mise exec chezmoi -- chezmoi init ${REPO} --apply || fail "could not init chezmoi"
   cmDir="$(mise exec -- chezmoi data | jq -r .chezmoi.config.sourceDir)" || fail "could not determine chezmoi dir"
   cmData="${cmDir}/.chezmoidata.toml"
   [ -f $"${cmData}" ] || cat > ${cmData} <<EOF
@@ -136,6 +135,7 @@ bootstrap_chezmoi () {
 brewuser = "${BREWUSER}"
 gituser = "${USER}"
 EOF
+  mise exec chezmoi -- chezmoi init ${REPO} --apply || fail "could not init chezmoi"
   mise install
 }
 
