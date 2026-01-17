@@ -1,13 +1,14 @@
 #!{{ lookPath "sh" }}
 
+set -ex
+
 {{ if eq .chezmoi.os "darwin" -}}
 {{ $installedFile := joinPath .chezmoi.homeDir ".config/packages/brew.installed.txt" }}
 {{ $configuredFile := joinPath .chezmoi.homeDir ".config/packages/brew.configured.txt" }}
 # $installedFile: {{ include $installedFile | sha256sum }}
 {{ if stat $configuredFile }}
 # $configuredFile: {{ include $configuredFile | sha256sum }}
+diff {{$installedFile}} {{$configuredFile}} || echo
+su {{ template "brewuser.tmpl" . }} -c "brew bundle --cleanup --file={{ $configuredFile }}"
 {{ end }}
-cmd="su {{ template "brewuser.tmpl" . }} -c \"brew bundle --cleanup --file={{ $configuredFile }}\""
-echo "Running command: ${cmd}"
-eval ${cmd}
 {{ end }}
