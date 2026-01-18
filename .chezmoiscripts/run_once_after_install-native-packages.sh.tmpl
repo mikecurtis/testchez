@@ -9,5 +9,9 @@ set -ex
 {{ if not (stat $configuredFile) }}{{ output "touch" $configuredFile }}{{ end }}
 # $configuredFile: {{ include $configuredFile | sha256sum }}
 diff {{$installedFile}} {{$configuredFile}} || echo
-su {{ template "brewuser.tmpl" . }} -c "brew bundle --cleanup --file={{ $configuredFile }}"
+read -p "Apply brew diff? (y/N) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  su {{ template "brewuser.tmpl" . }} -c "brew bundle --cleanup --file={{ $configuredFile }}"
+fi
 {{ end }}
