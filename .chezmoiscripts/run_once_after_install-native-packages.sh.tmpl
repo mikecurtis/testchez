@@ -8,10 +8,15 @@ set -ex
 installedFile="$(mktemp)"
 # {{$configuredFile}}: {{ include $configuredFile | sha256sum }}
 /opt/homebrew/bin/brew bundle dump --force --file="${installedFile}" --brews --casks --no-restart
-diff ${installedFile} {{$configuredFile}} || echo
-read -p "Apply brew diff? (y/N) " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  su -l {{ template "brewuser.tmpl" . }} -c "brew bundle --cleanup --file={{ $configuredFile }}"
+hasDiff=false
+diff ${installedFile} {{$configuredFile}} || hasDiff=true
+if ${hasDiff}; then
+  read -p "Apply brew diff? (y/N) " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    su -l {{ template "brewuser.tmpl" . }} -c "brew bundle --cleanup --file={{ $configuredFile }}"
+  fi
+else
+  echo "No brew diffs!"
 fi
 {{ end }}
