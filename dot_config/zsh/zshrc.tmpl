@@ -54,7 +54,9 @@ fi
 
 export GH_CONFIG_DIR="${HOME}/.local/share/gh"
 
-( [ "$TERM" = "xterm-ghostty" ] || [ "$TERM_PROGRAM" = "ghostty" ] ) && ! $(which ghostty >/dev/null 2>&1) && export TERM=xterm-256color
+if [ "$TERM" = "xterm-ghostty" ]; then
+  infocmp -x xterm-ghostty > /dev/null 2>&1 || export TERM="xterm-256color"
+fi
 
 alias -- la='eza -a'
 alias -- ll='eza -l'
