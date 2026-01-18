@@ -136,7 +136,7 @@ bootstrap_chezmoi () {
 brewuser = "${BREWUSER}"
 gituser = "${USER}"
 EOF
-  mise exec chezmoi -- chezmoi init apply || fail "could not apply chezmoi"
+  mise exec chezmoi -- chezmoi apply || fail "could not apply chezmoi"
   mise install
 }
 
