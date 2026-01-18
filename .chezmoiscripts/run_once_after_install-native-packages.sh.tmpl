@@ -6,9 +6,8 @@ set -ex
 {{ $installedFile := joinPath .chezmoi.homeDir ".config/packages/brew.installed.txt" }}
 {{ $configuredFile := joinPath .chezmoi.homeDir ".config/packages/brew.configured.txt" }}
 # $installedFile: {{ include $installedFile | sha256sum }}
-{{ if stat $configuredFile }}
+{{ if not (stat $configuredFile) }}{{ output "touch" $configuredFile }}{{ end }}
 # $configuredFile: {{ include $configuredFile | sha256sum }}
 diff {{$installedFile}} {{$configuredFile}} || echo
 su {{ template "brewuser.tmpl" . }} -c "brew bundle --cleanup --file={{ $configuredFile }}"
-{{ end }}
 {{ end }}
