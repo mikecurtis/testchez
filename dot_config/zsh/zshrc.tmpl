@@ -207,6 +207,7 @@ function todo {
 {{ if eq .chezmoi.os "darwin" }}
 # macos utilities
 export BREWUSER="{{ template "brewuser.tmpl" . }}"
+export HOMEBREW_NO_AUTO_UPDATE=1
 
 brew () {
   su ${BREWUSER} -c "brew $*"
