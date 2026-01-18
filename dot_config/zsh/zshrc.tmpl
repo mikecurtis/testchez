@@ -192,24 +192,41 @@ fi
 # TODO list via github issues
 function todo {
   local repo="${GITUSER}/TODO"
-  local op="list"
+  local op="--list"
   if [ $# -gt 0 ]; then
     op="$1"
     shift
   fi
   local cmd=""
   case "${op}" in
-    l|list)
+    -h|--help)
+      cat <<EOF
+todo -h|-l|-a|-c
+  -h|--help:
+    help
+  -l|--list:
+    list TODOs
+  -a|--add|--create ...:
+    create a TODO with following subject
+  -c|--close ...:
+    close TODO of the following number
+EOF
+      return
+      ;;
+    -l|--list)
       cmd="list --limit 100"
       ;;
-    a|add|create)
+    -a|--add|--create)
       cmd="create -b '' -t \"$*\""
       ;;
-    c|close)
+    -c|--close)
       cmd="close $1"
       ;;
+    *)
+      cmd="${op} $*"
+      ;;
   esac
-  eval gh -R "${repo}" issue "${cmd}"
+  eval gh -R "${repo}" issue ${cmd}
 }
 
 {{ if eq .chezmoi.os "darwin" }}
