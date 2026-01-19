@@ -57,13 +57,14 @@ cmc = "cd {{.chezmoi.sourceDir}}"
 cmd = "chezmoi diff"
 cma = "chezmoi apply -v"
 cmu = "chezmoi update -v"
-cmi = """() {
+cmi = """() {(
+  setopt LOCAL_OPTIONS ERREXIT
   cd {{.chezmoi.sourceDir}}
   local ignoreFile=".chezmoiignore"
   chezmoi unmanaged >> ${ignoreFile}
   LC_COLLATE=C LC_ALL=C sort -u -o ${ignoreFile} ${ignoreFile}
   git diff ${ignoreFile}
-}"""
+)}"""
 
 
 ################################################
@@ -85,25 +86,22 @@ brew = """() {
 {{ end }}
 
 # cross-platform native package update alias
-pu = """() {
-echo "Checking for package upgrades..."
+pu = """() {(
+  setopt LOCAL_OPTIONS ERREXIT XTRACE
 {{ if eq .chezmoi.os "darwin" -}}
-echo "Running brew..."
-su -l ${BREWUSER} -c "brew update && brew upgrade"
+  su -l ${BREWUSER} -c "brew update && brew upgrade"
 {{- else if and (eq .chezmoi.os "linux") (hasKey .chezmoi.osRelease "id") -}}
 {{-   if eq .chezmoi.osRelease.idLike "debian" -}}
-echo "Running apt..."
-sudo -i bash -c "apt update -y && apt upgrade -y && apt autoremove -y"
+  sudo -i bash -c "apt update -y && apt upgrade -y && apt autoremove -y"
 {{-   else if eq .chezmoi.osRelease.idLike "arch" -}}
-echo "Running pacman..."
-sudo pacman -Suy
+  sudo pacman -Suy
 {{-   else -}}
 {{- /* other Linux distro */ -}}
 {{-   end -}}
 {{- else -}}
 {{- /* other OS */ -}}
 {{- end }}
-}"""
+)}"""
 
 mu = "mise upgrade -y && mise prune -y"
 u = "cmu && pu && mu"
@@ -112,13 +110,15 @@ u = "cmu && pu && mu"
 ################################################
 # TODO list (via github issues)
 ################################################
-todo = """() {
+todo = """() {(
+  setopt LOCAL_OPTIONS ERREXIT
   local repo="${GITUSER}/TODO"
   local op="--list"
   if [ $# -gt 0 ]; then
     op="$1"
     shift
   fi
+  echo "NEXT: $*"
   local cmd=""
   case "${op}" in
     -h|--help)
@@ -141,7 +141,7 @@ EOF
       cmd="list --limit 100"
       ;;
     -a|--add|--create)
-      cmd="create -b '' -t \"$*\""
+      cmd="create -b '' -t \\"$*\\""
       ;;
     -c|--close)
       cmd="close $1"
@@ -155,14 +155,15 @@ EOF
       ;;
   esac
   eval gh -R "${repo}" issue ${cmd}
-}"""
+)}"""
 
 
 ################################################
 # ssh with tmux tunneling.
 # Should only be used on trusted destinations.
 ################################################
-tsh = """() {
+tsh = """() {(
+  setopt LOCAL_OPTIONS ERREXIT XTRACE
   [ "${TMUX}" ] || ( echo "No \\${TMUX} found" ; return 1 )
   local localSocket="$(echo ${TMUX} | cut -d ',' -f1)"
   local remoteSocket="/tmp/tmux.remote.$(date +'%s')"
@@ -174,4 +175,4 @@ tsh = """() {
     export FROM_TSH=true ; \
     trap \\"rm ${remoteSocket}\\" EXIT; \
     exec \\$SHELL -l"
-}"""
+)}"""
