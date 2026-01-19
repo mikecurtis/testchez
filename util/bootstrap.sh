@@ -129,13 +129,18 @@ chsh_zsh () {
 bootstrap_chezmoi () {
   mise use -g chezmoi || fail "chezmoi install failed"
   mise exec chezmoi -- chezmoi init ${REPO} || fail "could not init chezmoi"
-  cmDir="$(mise exec chezmoi -- chezmoi data | jq -r .chezmoi.config.sourceDir)" || fail "could not determine chezmoi dir"
-  cmData="${cmDir}/.chezmoidata.toml"
-  [ -f $"${cmData}" ] || cat > ${cmData} <<EOF
-[chezmoidata]
+  cmDir="${HOME}/.config/chezmoi"
+  cmData="${cmDir}/chezmoi.toml"
+  if ! [ -f $"${cmData}" ]; then
+    mkdir -p ${cmDir}
+    cat > ${cmData} <<EOF
+[data.chezmoidata]
 brewuser = "${BREWUSER}"
 gituser = "${USER}"
+
+[data.chezmoidata.local]
 EOF
+  fi
   mise exec chezmoi -- chezmoi apply || fail "could not apply chezmoi"
   mise install
 }

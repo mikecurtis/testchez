@@ -1,5 +1,5 @@
+# Define additional allow patterns in .data.chezmoidata.local.compaudit in chezmoi.toml
+
 [chezmoidata.compaudit]
 allow = [
-  "/Applications/*",
-  "/usr/local/share/zsh/*",
 ]

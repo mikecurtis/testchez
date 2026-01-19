@@ -1,19 +1,7 @@
 # Brew file
-{{ if hasKey . "chezmoidata" -}}
-  {{- if hasKey .chezmoidata "brew" -}}
-    {{- range .chezmoidata.brew.brews -}}
+{{- range sortAlpha (concat .chezmoidata.brew.brews .chezmoidata.local.brew.brews) -}}
 brew {{ . | quote }}
-{{    end -}}
-    {{- range .chezmoidata.brew.casks -}}
+{{ end -}}
+{{- range sortAlpha (concat .chezmoidata.brew.casks .chezmoidata.local.brew.casks) -}}
 cask {{ . | quote }}
-{{    end }}
-  {{- end -}}
-  {{ if hasKey .chezmoidata "brewlocal" -}}
-    {{- range .chezmoidata.brewlocal.brews -}}
-brew {{ . | quote }}
-{{    end }}
-    {{- range .chezmoidata.brewlocal.casks -}}
-cask {{ . | quote }}
-{{    end }}
-  {{- end }}
-{{- end -}}
+{{ end }}

@@ -1,9 +1,7 @@
-# Define additional packages in .chezmoidata.toml as [chezmoidata.brewlocal]
+# Define additional packages in .data.chezmoidata.local.brew in chezmoi.toml
 
 [chezmoidata.brew]
-
 brews = [
 ]
-
 casks = [
 ]

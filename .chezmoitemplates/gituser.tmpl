@@ -1,11 +1,5 @@
 {{- /* This deletes an empty string before the template */ -}}
-{{ if and
-     (and
-       (hasKey . "chezmoidata")
-       (hasKey .chezmoidata "gituser")
-     )
-     (ne .chezmoidata.gituser "")
-}}
+{{ if ne .chezmoidata.gituser "" }}
   {{- .chezmoidata.gituser -}}
 {{ else }}
   {{- .chezmoi.username -}}

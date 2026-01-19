@@ -12,7 +12,7 @@ typeset -U path cdpath fpath manpath
 # Exclude them from the initial compinit audit.  Then, then load compinit again
 # with these entries included and auditing disabled.
 local _original_fpath=(${fpath})
-{{- range .chezmoidata.compaudit.allow }}
+{{- range sortAlpha (concat .chezmoidata.compaudit.allow .chezmoidata.local.compaudit.allow) }}
 fpath=(${fpath[@]:#{{.}}})
 {{- end }}
 autoload -U compinit && compinit

@@ -1,11 +1,5 @@
 {{- /* This deletes an empty string before the template */ -}}
-{{ if and
-     (and
-       (hasKey . "chezmoidata")
-       (hasKey .chezmoidata "brewuser")
-     )
-     (ne .chezmoidata.brewuser "")
-}}
+{{ if ne .chezmoidata.brewuser "" }}
   {{- .chezmoidata.brewuser -}}
 {{ else }}
   {{- .chezmoi.username -}}
