@@ -20,7 +20,7 @@ fpath=(${_original_fpath})
 unset _original_fpath
 compinit -u
 {{ else }}
-autoload -U compinit && compinit -u
+autoload -U compinit && compinit
 {{ end }}
 ZSH_AUTOSUGGEST_STRATEGY=(history)
 
