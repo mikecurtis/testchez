@@ -116,6 +116,7 @@ sudo pacman -Suy
 {{- end }}
 }"""
 
+{{ if eq .chezmoi.os "darwin" -}}
 brew = """() {
   case "$1" in
     install|update|upgrade|uninstall)
@@ -127,6 +128,7 @@ brew = """() {
       ;;
   esac
 }"""
+{{ end }}
 
 # ssh with tmux tunneling.  Should only be used on trusted destinations.
 tsh = """() {
