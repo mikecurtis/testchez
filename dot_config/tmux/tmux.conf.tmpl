@@ -104,4 +104,4 @@ set -g @dracula-show-empty-plugins true
 ## Initialize TMUX plugin manager (must go last)
 ###############################################################################
 
-run '~/.tmux/plugins/tpm/tpm'
+run '{{ joinPath .chezmoi.homeDir ".local/share/tpm/tpm" }}'

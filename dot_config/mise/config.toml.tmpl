@@ -8,4 +8,14 @@ github-cli = "latest"
 neovim = "latest"
 ripgrep = "latest"
 starship = "latest"
-tmux = "latest"
+
+[tools.tmux]
+version = "latest"
+{{ $tpmSourceDir := joinPath .chezmoi.homeDir ".local/share/tpm" }}
+postinstall = """
+  ( [ ! -d {{$tpmSourceDir}} ] &&
+    mkdir -p ${{$tpmSourceDir}} &&
+    git clone https://github.com/tmux-plugins/tpm {{$tpmSourceDir}} ) &&
+  tmux -c {{$tpmSourceDir}}/tpm &&
+  tmux -c {{$tpmSourceDir}}/bindings/install_plugins
+"""
