@@ -47,6 +47,7 @@ vimdiff = "nvim -d%"
 # tmux
 ################################################
 tm = "tmux list-sessions > /dev/null 2>&1 && tmux a || tmux"
+tpmu = "git -C {{$tpmSourceDir}} pull && tmux -c {{$tpmSourceDir}}/bindings/install_plugins"
 
 
 ################################################
@@ -89,7 +90,7 @@ brew = """() {
 pu = """() {(
   setopt LOCAL_OPTIONS ERREXIT XTRACE
 {{ if eq .chezmoi.os "darwin" -}}
-  su -l ${BREWUSER} -c "brew update && brew upgrade"
+  su -l ${BREWUSER} -c "HOMEBREW_NO_AUTO_UPDATE=0 NONINTERACTIVE=1 brew upgrade"
 {{- else if and (eq .chezmoi.os "linux") (hasKey .chezmoi.osRelease "id") -}}
 {{-   if eq .chezmoi.osRelease.idLike "debian" -}}
   sudo -i bash -c "apt update -y && apt upgrade -y && apt autoremove -y"
@@ -104,7 +105,8 @@ pu = """() {(
 )}"""
 
 mu = "mise upgrade -y && mise prune -y"
-u = "cmu && pu && mu"
+
+u = "cmu && pu && mu && tpmu"
 
 
 ################################################
