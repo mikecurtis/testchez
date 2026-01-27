@@ -11,6 +11,9 @@ ripgrep = "latest"
 starship = "latest"
 yq = "latest"
 zellij = "latest"
+{{- range $key, $val := .chezmoidata.local.mise.tools }}
+{{$key}} = {{$val | toToml}}
+{{- end }}
 
 [tools.neovim]
 version = "latest"

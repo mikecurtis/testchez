@@ -1,0 +1,9 @@
+[chezmoidata.local.brew]
+brews = []
+casks = []
+
+[chezmoidata.local.compaudit]
+allow = []
+
+[chezmoidata.local.mise]
+tools = {}
