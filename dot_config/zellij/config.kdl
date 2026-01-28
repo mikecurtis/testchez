@@ -141,6 +141,8 @@ keybinds clear-defaults=true {
         bind "Ctrl g" { SwitchToMode "locked"; }
         bind "Ctrl n" { NewPane; }
         bind "Ctrl q" { Quit; }
+        bind "Ctrl PageUp" { GoToPreviousTab; }
+        bind "Ctrl PageDown" { GoToNextTab; }
     }
     shared_except "locked" "move" {
         bind "Ctrl h" { SwitchToMode "move"; }
